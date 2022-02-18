@@ -7,7 +7,7 @@ from difflib import SequenceMatcher
 
 
 def similar(a, b):
-	''' Similarity function
+	''' Similarity function.
 	'''
 	return SequenceMatcher(None, a, b).ratio()
 
