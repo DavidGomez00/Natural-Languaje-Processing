@@ -1,12 +1,17 @@
 """
 Code adapted from the NLP class by Daniel Jurafski & Christopher Manning
+
+Group: David David Esme: David Andrés, David Gómez y Esmeralda Madrazo
+
+This code was made in colaboration with Group Juan Victor: Victor Viñas and Juan Becerro
 """
 import sys
 import os
 import re
 import pprint
 
-emails = '((?:\w[.-]?)+)\s?@\s?-?((?:\w[.-]?)+)-?.-?[Ee]-?[Dd]-?[Uu]'
+emails = '((?:\w[.-]?)+)\s?(?:@| WHERE | at |&#x40;)\s?-?((?:\w(?:\sdot\s|[;.-])?)+)-?(?:.|\sDOM\s|\sdot\s|;)-?[Ee]-?[Dd]-?[Uu]'
+phone_pat = '(?:\(|[ ]|^)((?:[2-9])(?:[02-9]{2}|[02-9]1|1[02-9]))\)?-? ?([0-9]{3})-? ?([0-9]{4})[^0-9]'
 
 """ 
 This function takes in a filename along with the file object and
@@ -26,6 +31,14 @@ def process_file(name, f):
         for m in matches:
             email = '%s@%s.edu' % m
             email = email.replace('-', '')
+            email = email.replace('WHERE', '@')
+            email = email.replace('DOM', '.')
+            email = email.replace(' dot ', '.')
+            email = email.replace(' dt ', '.')
+            email = email.replace(';', '.')
+            email = email.replace(' at ', '@')
+            email = email.replace('&#x40;', '@')
+            email = email.replace(' ', '.')
             print(f'{email}')
             res.append((name,'e',email))
 
