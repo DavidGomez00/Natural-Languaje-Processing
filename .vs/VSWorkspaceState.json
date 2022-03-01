@@ -1,8 +1,8 @@
 {
   "ExpandedNodes": [
-    "",
-    "\\Task1"
+    "\\Assignment1",
+    "\\Assignment1\\data",
+    "\\Assignment1\\data\\dev"
   ],
-  "SelectedNode": "\\Task1\\Task1.py",
   "PreviewInSolutionExplorer": false
 }
