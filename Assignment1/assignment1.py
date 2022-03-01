@@ -8,8 +8,6 @@ import pprint
 
 emails = '((?:\w[.-]?)+)\s?@\s?-?((?:\w[.-]?)+)-?.-?[Ee]-?[Dd]-?[Uu]'
 
-# emails = '((?:\w(?:-))+)@((?:-\w)+)-\.-e-d-u'
-
 """ 
 This function takes in a filename along with the file object and
 scans its contents against regex patterns. It returns a list of
@@ -30,6 +28,12 @@ def process_file(name, f):
             email = email.replace('-', '')
             print(f'{email}')
             res.append((name,'e',email))
+
+        p_matches = re.findall(phone_pat, line)
+        for m in p_matches:
+            phone = '%s-%s-%s' % m
+            res.append((name, 'p', phone))        
+        
     return res
 
 """
