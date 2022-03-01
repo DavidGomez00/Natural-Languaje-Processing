@@ -6,8 +6,9 @@ import os
 import re
 import pprint
 
-emails = '(\w+(?:\w+(?:[-;\.])*)+)\s?@\s?((?:\w+[-;\.]*)+).[Ee]-?[Dd]-?[Uu]'
+emails = '((?:\w[.-]?)+)\s?@\s?-?((?:\w[.-]?)+)-?.-?[Ee]-?[Dd]-?[Uu]'
 
+# emails = '((?:\w(?:-))+)@((?:-\w)+)-\.-e-d-u'
 
 """ 
 This function takes in a filename along with the file object and
@@ -26,6 +27,8 @@ def process_file(name, f):
         matches = re.findall(emails,line)
         for m in matches:
             email = '%s@%s.edu' % m
+            email = email.replace('-', '')
+            print(f'{email}')
             res.append((name,'e',email))
     return res
 
