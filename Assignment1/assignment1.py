@@ -6,9 +6,8 @@ import os
 import re
 import pprint
 
-emails = '(\w+(?:\w+(?:[-;\.])*)+)\s?@\s?((?:\w+[-;\.]*)+).[Ee]-?[Dd]-?[Uu]'
-phone_pat = '\(?([02-9])([02-9]{2}|[02-9]1|1[02-9])\)?-? ?([0-9]{3})-? ?([0-9]{4})'
-
+emails = '(\w+[.-]?\w)\s?@\s?((?:\w+[-;.])+).[Ee]-?[Dd]-?[Uu]'
+phone_pat = '(?:\(|[ ]|^)((?:[2-9])(?:[02-9]{2}|[02-9]1|1[02-9]))\)?-? ?([0-9]{3})-? ?([0-9]{4})[^0-9]'
 
 """ 
 This function takes in a filename along with the file object and
@@ -31,7 +30,7 @@ def process_file(name, f):
 
         p_matches = re.findall(phone_pat, line)
         for m in p_matches:
-            phone = '%s%s-%s-%s' % m
+            phone = '%s-%s-%s' % m
             res.append((name, 'p', phone))        
         
     return res
