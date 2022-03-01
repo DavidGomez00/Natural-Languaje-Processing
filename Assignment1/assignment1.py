@@ -7,6 +7,7 @@ import re
 import pprint
 
 emails = '(\w+(?:\w+(?:[-;\.])*)+)\s?@\s?((?:\w+[-;\.]*)+).[Ee]-?[Dd]-?[Uu]'
+phone_pat = '\(?([02-9])([02-9]{2}|[02-9]1|1[02-9])\)?-? ?([0-9]{3})-? ?([0-9]{4})'
 
 
 """ 
@@ -27,6 +28,12 @@ def process_file(name, f):
         for m in matches:
             email = '%s@%s.edu' % m
             res.append((name,'e',email))
+
+        p_matches = re.findall(phone_pat, line)
+        for m in p_matches:
+            phone = '%s%s-%s-%s' % m
+            res.append((name, 'p', phone))        
+        
     return res
 
 """
