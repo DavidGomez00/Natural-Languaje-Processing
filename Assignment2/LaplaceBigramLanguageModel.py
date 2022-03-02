@@ -19,9 +19,12 @@ class LaplaceBigramLanguageModel:
       prevToken = ""
       for word in sentence.data:
         token = word.word
+        
+        #if  token != "</s>":
+        self.unigramCount[token] += 1
 
-        if token != "<s>" and token != "</s>":
-          self.unigramCount[token] += 1
+        #if token != "<s>" and token != "</s>":
+        if prevToken != "":
           self.bigramsCount[(token, prevToken)] += 1
         
         prevToken = token
@@ -37,6 +40,6 @@ class LaplaceBigramLanguageModel:
     for token in sentence:
       if prevToken != "":
         count = self.bigramsCount[(token, prevToken)] + 1
-        score += math.log(count / (self.unigramCount[prevToken] + len(self.unigramCount)))
+        score += math.log(count / (self.unigramCount[prevToken] + len(self.bigramsCount)))
       prevToken = token
     return score
