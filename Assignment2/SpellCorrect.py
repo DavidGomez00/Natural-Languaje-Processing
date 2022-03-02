@@ -105,7 +105,7 @@ def main():
 
   devPath = './Assignment2/data/holbrook-tagged-dev.dat'
   devCorpus = HolbrookCorpus(devPath)
-
+  
   print('Uniform Language Model: ')
   uniformLM = UniformLanguageModel(trainingCorpus)
   uniformSpell = SpellCorrect(uniformLM, trainingCorpus)
@@ -123,7 +123,7 @@ def main():
   laplaceBigramSpell = SpellCorrect(laplaceBigramLM, trainingCorpus)
   laplaceBigramOutcome = laplaceBigramSpell.evaluate(devCorpus)
   print(str(laplaceBigramOutcome))
-
+  '''
   print('Stupid Backoff Language Model: ')  
   sbLM = StupidBackoffLanguageModel(trainingCorpus)
   sbSpell = SpellCorrect(sbLM, trainingCorpus)
@@ -135,6 +135,6 @@ def main():
   knSpell = SpellCorrect(knLM, trainingCorpus)
   knOutcome = knSpell.evaluate(devCorpus)
   print(str(knOutcome))
-
+  '''
 if __name__ == "__main__":
     main()

@@ -15,9 +15,9 @@ class LaplaceUnigramLanguageModel:
     for sentence in corpus.corpus:
       for datum in sentence.data:  
         token = datum.word
-        self.unigramCounts[token] +=  1
-        self.total += 1
-    pass
+        if token != "<s>" and token != "</s>":
+          self.unigramCounts[token] +=  1
+          self.total += 1
 
   def score(self, sentence):
     """ Takes a list of strings as argument and returns the log-probability of the 
@@ -26,7 +26,5 @@ class LaplaceUnigramLanguageModel:
     score = 0.0
     for token in sentence:
       count = self.unigramCounts[token] + 1
-      N = len(sentence)
-      V = len(self.unigramCounts)
-      score += math.log(count/(N+V))
+      score += math.log(count/(self.total+len(self.unigramCounts)))
     return score
