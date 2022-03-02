@@ -1,3 +1,6 @@
+import math, collections
+
+
 class LaplaceUnigramLanguageModel:
 
   def __init__(self, corpus):
@@ -8,7 +11,7 @@ class LaplaceUnigramLanguageModel:
   def train(self, corpus):
     """ Takes a corpus and trains your language model. 
         Compute any counts or other corpus statistics in this function.
-    """  
+    """
     # TODO your code here
     pass
 
