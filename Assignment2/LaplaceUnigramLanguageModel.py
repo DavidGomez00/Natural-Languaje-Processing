@@ -1,3 +1,5 @@
+import math, collections
+
 class LaplaceUnigramLanguageModel:
 
   def __init__(self, corpus):
