@@ -25,5 +25,7 @@ class LaplaceUnigramLanguageModel:
     score = 0.0
     for token in sentence:
       count = self.unigramCounts[token] + 1
-      score += math.log(count)
+      N = len(sentence)
+      V = len(self.unigramCounts)
+      score += math.log(count/(N+V))
     return score
