@@ -129,12 +129,12 @@ def main():
   sbSpell = SpellCorrect(sbLM, trainingCorpus)
   sbOutcome = sbSpell.evaluate(devCorpus)
   print(str(sbOutcome))
-  '''
+  
   print('KneserNey Language Model: ')
   knLM = KneserNeyLanguageModel(trainingCorpus)
   knSpell = SpellCorrect(knLM, trainingCorpus)
   knOutcome = knSpell.evaluate(devCorpus)
   print(str(knOutcome))
-  '''
+  
 if __name__ == "__main__":
     main()
