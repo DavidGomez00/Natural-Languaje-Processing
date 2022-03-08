@@ -123,13 +123,13 @@ def main():
   laplaceBigramSpell = SpellCorrect(laplaceBigramLM, trainingCorpus)
   laplaceBigramOutcome = laplaceBigramSpell.evaluate(devCorpus)
   print(str(laplaceBigramOutcome))
-  '''
+  
   print('Stupid Backoff Language Model: ')  
   sbLM = StupidBackoffLanguageModel(trainingCorpus)
   sbSpell = SpellCorrect(sbLM, trainingCorpus)
   sbOutcome = sbSpell.evaluate(devCorpus)
   print(str(sbOutcome))
-
+  '''
   print('KneserNey Language Model: ')
   knLM = KneserNeyLanguageModel(trainingCorpus)
   knSpell = SpellCorrect(knLM, trainingCorpus)
