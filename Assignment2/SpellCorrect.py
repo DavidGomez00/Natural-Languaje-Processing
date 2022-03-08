@@ -17,6 +17,9 @@ import types
 
 Copyright 2007 Peter Norvig. 
 Open source code under MIT license: http://www.opensource.org/licenses/mit-license.php
+
+This assignment was developed by the Juan Victor group and the Esme David David group.
+   
 """
 
 import re, collections
