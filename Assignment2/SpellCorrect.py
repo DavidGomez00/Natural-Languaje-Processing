@@ -17,6 +17,9 @@ import types
 
 Copyright 2007 Peter Norvig. 
 Open source code under MIT license: http://www.opensource.org/licenses/mit-license.php
+
+This assignment was developed by the Juan Victor group and the Esme David David group.
+   
 """
 
 import re, collections
@@ -123,18 +126,18 @@ def main():
   laplaceBigramSpell = SpellCorrect(laplaceBigramLM, trainingCorpus)
   laplaceBigramOutcome = laplaceBigramSpell.evaluate(devCorpus)
   print(str(laplaceBigramOutcome))
-  '''
+  
   print('Stupid Backoff Language Model: ')  
   sbLM = StupidBackoffLanguageModel(trainingCorpus)
   sbSpell = SpellCorrect(sbLM, trainingCorpus)
   sbOutcome = sbSpell.evaluate(devCorpus)
   print(str(sbOutcome))
-
+  
   print('KneserNey Language Model: ')
   knLM = KneserNeyLanguageModel(trainingCorpus)
   knSpell = SpellCorrect(knLM, trainingCorpus)
   knOutcome = knSpell.evaluate(devCorpus)
   print(str(knOutcome))
-  '''
+  
 if __name__ == "__main__":
     main()

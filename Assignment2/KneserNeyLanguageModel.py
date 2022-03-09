@@ -1,21 +1,70 @@
+import math, collections
+
 class KneserNeyLanguageModel:
 
   def __init__(self, corpus):
     """Initialize your data structures in the constructor."""
-    # TODO your code here
+    # Initial values
     self.d=2
+    self.total = 0
+
+    # Initiate dicts
+    self.bigramsCount = collections.defaultdict(int)
+    self.unigramCount = collections.defaultdict(int)
+    self.nNextCounts = collections.defaultdict(int)
+    self.nPrevCounts = collections.defaultdict(set)
+
     self.train(corpus)
 
   def train(self, corpus):
     """ Takes a corpus and trains your language model. 
         Compute any counts or other corpus statistics in this function.
     """  
-    # TODO your code here
-    pass
+
+    # For each sentence
+    for sentence in corpus.corpus:
+      # Reset the previous token
+      prevToken = ""
+      # For each word
+      for word in sentence.data:
+        # Token
+        token = word.word
+        # Compute N
+        self.total += 1
+        # c(w)
+        self.unigramCount[token] += 1
+
+        if prevToken != "":
+          # Count the number of word types prev|next w
+          self.nNextCounts[prevToken] += 1
+          self.nPrevCounts[token].add(prevToken)
+          # Count the number of bigrams
+          self.bigramsCount[(token, prevToken)] += 1
+        
+        # Set current token as next previous token
+        prevToken = token
 
   def score(self, sentence):
     """ Takes a list of strings as argument and returns the log-probability of the 
         sentence using your language model. Use whatever data you computed in train() here.
     """
-    # TODO your code here
-    return 0.0
+    # Initial score
+    score = 0.0
+    # First word has no previous token
+    prevToken = ""
+
+    # For each word
+    for token in sentence:
+      if prevToken != "":
+        # Compute score
+        numerator = max(self.bigramsCount[(token, prevToken)] - self.d, 0) + self.d * self.nNextCounts[prevToken] * len(self.nPrevCounts[token]) / len(self.bigramsCount)
+        
+        if numerator > 0:
+            score += math.log(numerator/self.unigramCount[prevToken])
+        else:
+            score += math.log((self.unigramCount[token] + 1) / (self.total + len(self.unigramCount)))   
+      
+       # Set current token as next previous token
+      prevToken = token
+
+    return score
