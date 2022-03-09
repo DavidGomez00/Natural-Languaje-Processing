@@ -54,15 +54,15 @@ class LaplaceBigramLanguageModel:
     """
     # Initial score
     score = 0.0
-    # First word has no previous token
-    prevToken = ""
 
     # For each word
-    for token in sentence:
-      if prevToken != "":
-        # Compute score
-        count = self.bigramsCount[(token, prevToken)] + 1
-        score += math.log(count / (self.unigramCount[prevToken] + len(self.bigrams)))
-      # Set the current token as the next previous token
-      prevToken = token
+    for i in range(1, len(sentence)):
+      
+      # Assing tokens
+      token = sentence[i]
+      prevToken = sentence[i-1]
+
+      # Compute score
+      count = self.bigramsCount[(token, prevToken)] + 1
+      score += math.log(count / (self.unigramCount[prevToken] + len(self.bigrams)))
     return score
