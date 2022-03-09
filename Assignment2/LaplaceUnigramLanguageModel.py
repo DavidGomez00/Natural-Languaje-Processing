@@ -25,6 +25,7 @@ class LaplaceUnigramLanguageModel:
     """
     score = 0.0
     for token in sentence:
-      count = self.unigramCounts[token] + 1
-      score += math.log(count/(self.total+len(self.unigramCounts)))
+      if token != "<s>" and token != "</s>":
+        count = self.unigramCounts[token] + 1
+        score += math.log(count/(self.total+len(self.unigramCounts)))
     return score
