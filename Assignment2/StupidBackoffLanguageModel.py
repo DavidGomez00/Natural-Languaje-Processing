@@ -51,6 +51,5 @@ class StupidBackoffLanguageModel:
 
         count = self.unigramCount[token] + 1
         score += math.log(0.4 * count / (self.total + len(self.unigramCount)))
-      
-      prevToken = token
+        
     return score
