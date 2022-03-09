@@ -1,8 +1,9 @@
 {
   "ExpandedNodes": [
     "",
-    "\\Assignment2"
+    "\\Assignment2",
+    "\\Task2"
   ],
-  "SelectedNode": "\\Assignment2\\LaplaceUnigramLanguageModel.py",
+  "SelectedNode": "\\Assignment2\\LaplaceBigramLanguageModel.py",
   "PreviewInSolutionExplorer": false
 }

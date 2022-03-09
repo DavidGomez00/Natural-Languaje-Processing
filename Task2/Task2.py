@@ -1,11 +1,14 @@
 import nltk
-from nltk.corpus import names
+from nltk.corpus import brown
 
 
 if __name__ == "__main__":
-	female_names = names.words('female.txt')
-	male_names = names.words('male.txt')
 
-	cfd = nltk.ConditionalFreqDist((name, males)
-								for name in males
-								for )
+	for c in brown.categories():
+		count = 0
+		words = brown.words(categories = c)
+		print(c)
+		for word in words:
+			if word == "fawn": count += 1
+			if count > 2: break
+		print(count)
