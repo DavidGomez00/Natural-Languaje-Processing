@@ -6,6 +6,7 @@ class LaplaceUnigramLanguageModel:
   def __init__(self, corpus):
     """Initialize your data structures in the constructor."""
     # Initialize structures
+    self.words = set()
     self.unigramCounts = collections.defaultdict(lambda: 0)
     # N
     self.total = 0
@@ -26,6 +27,7 @@ class LaplaceUnigramLanguageModel:
         if token != "<s>" and token != "</s>":
           # c(w) ++
           self.unigramCounts[token] +=  1
+          self.words.add(token)
           # N ++
           self.total += 1
 
@@ -39,5 +41,5 @@ class LaplaceUnigramLanguageModel:
     for token in sentence:
       # Compute score
       count = self.unigramCounts[token] + 1
-      score += math.log(count/(self.total+len(self.unigramCounts)))
+      score += math.log(count/(self.total+len(self.words))) 
     return score

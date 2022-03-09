@@ -9,6 +9,9 @@ class LaplaceBigramLanguageModel:
     # Initialize structures
     self.bigramsCount = collections.defaultdict(int)
     self.unigramCount = collections.defaultdict(int)
+    self.words = set()
+    self.bigrams = set()
+
     
     # Train
     self.train(corpus)
@@ -23,17 +26,27 @@ class LaplaceBigramLanguageModel:
       prevToken = ""
 
       # For each word
-      for word in sentence.data:
-        # Token
-        token = word.word
+      for i in range(0, len(sentence.data)):
+        if i == 0:
+          token = sentence.data[i].word
+
+        if i > 0:
+          prevToken = sentence.data[i - 1].word
+        
+          # Token
+          token = sentence.data[i].word
+          
+          # Count bigrams
+          self.bigramsCount[(token, prevToken)] += 1
+          self.bigrams.add((token, prevToken))
+
+          # Set token as the next previous token
+          prevToken = token
+
         # c(w)
         self.unigramCount[token] += 1
-        # Count bigrams
-        if prevToken != "":
-          self.bigramsCount[(token, prevToken)] += 1
-        
-        # Set token as the next previous token
-        prevToken = token
+        self.words.add(token)
+
 
   def score(self, sentence):
     """ Takes a list of strings as argument and returns the log-probability of the 
@@ -49,7 +62,7 @@ class LaplaceBigramLanguageModel:
       if prevToken != "":
         # Compute score
         count = self.bigramsCount[(token, prevToken)] + 1
-        score += math.log(count / (self.unigramCount[prevToken] + len(self.bigramsCount)))
+        score += math.log(count / (self.unigramCount[prevToken] + len(self.bigrams)))
       # Set the current token as the next previous token
       prevToken = token
     return score
