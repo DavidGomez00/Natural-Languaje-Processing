@@ -23,8 +23,6 @@ class KneserNeyLanguageModel:
 
     # For each sentence
     for sentence in corpus.corpus:
-      # Reset the previous token
-      prevToken = ""
       # For each word
       for i in range(0, sentence.data):
         # Token
