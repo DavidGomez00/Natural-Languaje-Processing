@@ -10,9 +10,10 @@ class LaplaceBigramLanguageModel:
     # Initialize structures
     self.bigramsCount = collections.defaultdict(int)
     self.unigramCount = collections.defaultdict(int)
+
+    # Initialize sets
     self.words = set()
-    self.bigrams = set()
-    
+
     # Train
     self.train(corpus)
 
@@ -23,19 +24,18 @@ class LaplaceBigramLanguageModel:
 
     # For each sentence
     for sentence in corpus.corpus:
+      # Add unigramCounts for the first word
+      self.unigramCount[sentence.data[0].word] += 1
+      self.words.add(sentence.data[0].word)
 
       # For each word
       for i in range(1, len(sentence.data)):
-        if i == 0:
-          token = sentence.data[i].word
-
-        else:
-          token = sentence.data[i].word
-          prevToken = sentence.data[i - 1].word
+        # Assign token adn prevToken
+        token = sentence.data[i].word
+        prevToken = sentence.data[i - 1].word
                  
-          # Count bigrams
-          self.bigramsCount[(token, prevToken)] += 1
-          self.bigrams.add((token, prevToken))
+        # Count bigrams
+        self.bigramsCount[(token, prevToken)] += 1
 
         # c(w)
         self.unigramCount[token] += 1
@@ -46,6 +46,7 @@ class LaplaceBigramLanguageModel:
     """ Takes a list of strings as argument and returns the log-probability of the 
         sentence using your language model. Use whatever data you computed in train() here.
     """
+
     # Initial score
     score = 0.0
 
@@ -58,6 +59,6 @@ class LaplaceBigramLanguageModel:
 
       # Compute score
       count = self.bigramsCount[(token, prevToken)] + 1
-      score += math.log(count / (self.unigramCount[prevToken] + len(self.bigrams)))
+      score += math.log(count / (self.unigramCount[prevToken] + len(self.words)))
 
     return score

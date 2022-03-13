@@ -5,6 +5,7 @@ class LaplaceUnigramLanguageModel:
 
   def __init__(self, corpus):
     """Initialize your data structures in the constructor."""
+
     # Initialize structures
     self.words = set()
     self.unigramCounts = collections.defaultdict(lambda: 0)
@@ -17,6 +18,7 @@ class LaplaceUnigramLanguageModel:
     """ Takes a corpus and trains your language model. 
         Compute any counts or other corpus statistics in this function.
     """  
+
     # For each sentence
     for sentence in corpus.corpus:
       # For each word
@@ -35,6 +37,7 @@ class LaplaceUnigramLanguageModel:
     """ Takes a list of strings as argument and returns the log-probability of the 
         sentence using your language model. Use whatever data you computed in train() here.
     """
+
     # Initial score
     score = 0.0
     # For each word
