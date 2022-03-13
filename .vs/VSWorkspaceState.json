@@ -1,10 +1,9 @@
 {
   "ExpandedNodes": [
     "",
-    "\\Assignment1",
-    "\\Assignment1\\data\\dev",
-    "\\Assignment2"
+    "\\Assignment2",
+    "\\Task2"
   ],
-  "SelectedNode": "\\Assignment2\\SpellCorrect.py",
+  "SelectedNode": "\\Assignment2\\LaplaceBigramLanguageModel.py",
   "PreviewInSolutionExplorer": false
 }
