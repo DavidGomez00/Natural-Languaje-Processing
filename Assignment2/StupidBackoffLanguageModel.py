@@ -32,7 +32,6 @@ class StupidBackoffLanguageModel:
         # Token
         token = datum.word
         self.unigramCount[token] += 1
-        self.total += 1
       
         if i > 0:
           prevToken = sentence.data[i - 1].word
@@ -42,6 +41,7 @@ class StupidBackoffLanguageModel:
           if i < len(sentence) - 1:
             self.unigrams.add(token)
             self.bigrams.add((prevToken, token))
+            self.total += 1
         
         i += 1
         
