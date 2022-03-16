@@ -36,7 +36,7 @@ class LaplaceBigramLanguageModel:
           # Count bigrams
           self.bigramsCount[(prevToken, token)] += 1
 
-          if i < len(sentence - 1):
+          if i < len(sentence) - 1:
             self.words.add(token)
         
         i += 1

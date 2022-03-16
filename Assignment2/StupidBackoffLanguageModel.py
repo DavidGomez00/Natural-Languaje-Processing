@@ -39,9 +39,9 @@ class StupidBackoffLanguageModel:
           # Count bigrams
           self.bigramsCount[(prevToken, token)] += 1
 
-          if i < len(sentence - 1):
-            self.words.add(token)
-            self.bigrams.add(prevToken, token)
+          if i < len(sentence) - 1:
+            self.unigrams.add(token)
+            self.bigrams.add((prevToken, token))
         
         i += 1
         
@@ -78,8 +78,8 @@ class StupidBackoffLanguageModel:
       token = sentence[i]
       prevToken = sentence[i-1]
 
-      if self.bigramsCount[(token, prevToken)] > 0:
-        count = self.bigramsCount[(token, prevToken)]
+      if self.bigramsCount[(prevToken, token)] > 0:
+        count = self.bigramsCount[(prevToken, token)]
         score += math.log(count / (self.unigramCount[prevToken]))
       else:
         count = self.unigramCount[token] + 1
