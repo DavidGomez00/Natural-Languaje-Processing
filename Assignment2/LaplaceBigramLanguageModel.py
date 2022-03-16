@@ -22,24 +22,24 @@ class LaplaceBigramLanguageModel:
         Compute any counts or other corpus statistics in this function.
     """  
 
-    # For each sentence
     for sentence in corpus.corpus:
-      # Add unigramCounts for the first word
-      self.unigramCount[sentence.data[0].word] += 1
-      self.words.add(sentence.data[0].word)
-
+      
+      i = 0
       # For each word
-      for i in range(1, len(sentence.data)):
-        # Assign token adn prevToken
-        token = sentence.data[i].word
-        prevToken = sentence.data[i - 1].word
-                 
-        # Count bigrams
-        self.bigramsCount[(token, prevToken)] += 1
-
-        # c(w)
+      for datum in sentence.data:  
+        # Token
+        token = datum.word
         self.unigramCount[token] += 1
-        self.words.add(token)
+      
+        if i > 0:
+          prevToken = sentence.data[i - 1].word
+          # Count bigrams
+          self.bigramsCount[(prevToken, token)] += 1
+
+          if i < len(sentence - 1):
+            self.words.add(token)
+        
+        i += 1
 
 
   def score(self, sentence):
@@ -58,7 +58,7 @@ class LaplaceBigramLanguageModel:
       prevToken = sentence[i-1]
 
       # Compute score
-      count = self.bigramsCount[(token, prevToken)] + 1
+      count = self.bigramsCount[(prevToken, token)] + 1
       score += math.log(count / (self.unigramCount[prevToken] + len(self.words)))
 
     return score
