@@ -40,7 +40,7 @@ class KneserNeyLanguageModel:
         if i > 0:
           # Assign prevToken
           prevToken = sentence.data[i - 1].word
-          
+
           # Count bigrams
           self.bigramsCount[(prevToken, token)] += 1
           self.bigrams.add((prevToken, token))
@@ -65,13 +65,12 @@ class KneserNeyLanguageModel:
 
     # For each word
     for i in range(1, len(sentence)):
-      
       # Assign token and prevToken
       token = sentence[i]
       prevToken = sentence[i - 1]
 
       # Compute score
-      numerator = max(self.bigramsCount[(token, prevToken)] - self.d, 0) + self.d * self.nNextCounts[prevToken] * len(self.nPrevCounts[token]) / len(self.bigrams)
+      numerator = max(self.bigramsCount[(prevToken, token)] - self.d, 0) + self.d * self.nNextCounts[prevToken] * len(self.nPrevCounts[token]) / len(self.bigrams)
       
       if numerator > 0:
           score += math.log(numerator/self.unigramCount[prevToken])

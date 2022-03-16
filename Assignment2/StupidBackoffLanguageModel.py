@@ -39,7 +39,7 @@ class StupidBackoffLanguageModel:
           # Count bigrams
           self.bigramsCount[(prevToken, token)] += 1
 
-          if i < len(sentence - 1):
+          if i < len(sentence) - 1:
             self.words.add(token)
             self.bigrams.add(prevToken, token)
         
