@@ -24,7 +24,28 @@ class StupidBackoffLanguageModel:
     """ Takes a corpus and trains your language model. 
         Compute any counts or other corpus statistics in this function.
     """
-    
+    for sentence in corpus.corpus:
+      
+      i = 0
+      # For each word
+      for datum in sentence.data:  
+        # Token
+        token = datum.word
+        self.unigramCount[token] += 1
+        self.total += 1
+      
+        if i > 0:
+          prevToken = sentence.data[i - 1].word
+          # Count bigrams
+          self.bigramsCount[(prevToken, token)] += 1
+
+          if i < len(sentence - 1):
+            self.words.add(token)
+            self.bigrams.add(prevToken, token)
+        
+        i += 1
+        
+    '''
     for sentence in corpus.corpus:
       # Add unigramCounts for the first word
       self.unigramCount[sentence.data[0].word] += 1
@@ -41,6 +62,8 @@ class StupidBackoffLanguageModel:
         self.bigramsCount[(token, prevToken)] += 1
         self.bigrams.add((token, prevToken))
         self.total += 1
+    '''
+
 
   def score(self, sentence):
     """ Takes a list of strings as argument and returns the log-probability of the 
