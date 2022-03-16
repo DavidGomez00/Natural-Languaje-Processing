@@ -108,7 +108,7 @@ def main():
 
   devPath = './Assignment2/data/holbrook-tagged-dev.dat'
   devCorpus = HolbrookCorpus(devPath)
-  '''
+
   print('Uniform Language Model: ')
   uniformLM = UniformLanguageModel(trainingCorpus)
   uniformSpell = SpellCorrect(uniformLM, trainingCorpus)
@@ -132,7 +132,7 @@ def main():
   sbSpell = SpellCorrect(sbLM, trainingCorpus)
   sbOutcome = sbSpell.evaluate(devCorpus)
   print(str(sbOutcome))
-  '''
+
   print('KneserNey Language Model: ')
   knLM = KneserNeyLanguageModel(trainingCorpus)
   knSpell = SpellCorrect(knLM, trainingCorpus)

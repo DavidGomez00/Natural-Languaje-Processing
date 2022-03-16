@@ -73,8 +73,7 @@ class KneserNeyLanguageModel:
       prevToken = sentence[i - 1]
 
       # Compute score
-      numerator = max(self.bigramsCount[(prevToken, token)] - self.d, 0) 
-      + self.d * self.nNextCounts[prevToken] * len(self.nPrevCounts[token]) / len(self.bigrams)
+      numerator = max(self.bigramsCount[(prevToken, token)] - self.d, 0) + self.d * self.nNextCounts[prevToken] * len(self.nPrevCounts[token]) / len(self.bigrams)
       
       if numerator > 0:
           score += math.log(numerator/self.unigramCount[prevToken])
