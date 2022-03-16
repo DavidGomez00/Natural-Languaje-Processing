@@ -40,30 +40,11 @@ class StupidBackoffLanguageModel:
           self.bigramsCount[(prevToken, token)] += 1
 
           if i < len(sentence) - 1:
-            self.words.add(token)
-            self.bigrams.add(prevToken, token)
+            self.unigrams.add(token)
+            self.bigrams.add((prevToken, token))
         
         i += 1
         
-    '''
-    for sentence in corpus.corpus:
-      # Add unigramCounts for the first word
-      self.unigramCount[sentence.data[0].word] += 1
-      self.unigrams.add(sentence.data[0].word)
-      self.total += 1
-      # loop the rest
-      for i in range(1, len(sentence.data)):
-        # Assign tokens
-        token = sentence.data[i].word
-        prevToken = sentence.data[i-1].word
-        
-        self.unigramCount[token] += 1
-        self.unigrams.add(token)
-        self.bigramsCount[(token, prevToken)] += 1
-        self.bigrams.add((token, prevToken))
-        self.total += 1
-    '''
-
 
   def score(self, sentence):
     """ Takes a list of strings as argument and returns the log-probability of the 
@@ -78,8 +59,8 @@ class StupidBackoffLanguageModel:
       token = sentence[i]
       prevToken = sentence[i-1]
 
-      if self.bigramsCount[(token, prevToken)] > 0:
-        count = self.bigramsCount[(token, prevToken)]
+      if self.bigramsCount[(prevToken, token)] > 0:
+        count = self.bigramsCount[(prevToken, token)]
         score += math.log(count / (self.unigramCount[prevToken]))
       else:
         count = self.unigramCount[token] + 1
