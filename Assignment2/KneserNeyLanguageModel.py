@@ -11,6 +11,7 @@ class KneserNeyLanguageModel:
     # Initiate dicts
     self.bigramsCount = collections.defaultdict(int)
     self.unigramCount = collections.defaultdict(int)
+
     self.nNextCounts = collections.defaultdict(int)
     self.nPrevCounts = collections.defaultdict(set)
 
@@ -43,17 +44,19 @@ class KneserNeyLanguageModel:
 
           # Count bigrams
           self.bigramsCount[(prevToken, token)] += 1
-          self.bigrams.add((prevToken, token))
-
+          
           # Count the number of word types prev|next w
-          self.nNextCounts[prevToken] += 1
-          self.nPrevCounts[token].add(prevToken)
+          if (prevToken != "<s>" and prevToken != "</s>"):
+            self.nPrevCounts[token].add(prevToken)
+            self.nNextCounts[prevToken] += 1
 
           if i < len(sentence) - 1:
-            self.words.add(token)
+            self.unigrams.add(token)
             self.total +=1
+            if i > 1:
+              self.bigrams.add((prevToken, token))
           
-          i += 1
+        i += 1
 
   def score(self, sentence):
     """ Takes a list of strings as argument and returns the log-probability of the 
@@ -70,7 +73,8 @@ class KneserNeyLanguageModel:
       prevToken = sentence[i - 1]
 
       # Compute score
-      numerator = max(self.bigramsCount[(prevToken, token)] - self.d, 0) + self.d * self.nNextCounts[prevToken] * len(self.nPrevCounts[token]) / len(self.bigrams)
+      numerator = max(self.bigramsCount[(prevToken, token)] - self.d, 0) 
+      + self.d * self.nNextCounts[prevToken] * len(self.nPrevCounts[token]) / len(self.bigrams)
       
       if numerator > 0:
           score += math.log(numerator/self.unigramCount[prevToken])
