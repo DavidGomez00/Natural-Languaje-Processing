@@ -26,33 +26,34 @@ class KneserNeyLanguageModel:
         Compute any counts or other corpus statistics in this function.
     """  
 
-    # For each sentence
     for sentence in corpus.corpus:
-      # Counts for the first token in the sentence
-      self.unigramCount[sentence.data[0].word] += 1
-      self.unigrams.add(sentence.data[0].word)
-      self.total += 1
+      # position in the sentence
+      i = 0
 
       # For each word
-      for i in range(1, len(sentence.data)):
+      for datum in sentence.data:  
         # Token
-        token = sentence.data[i].word
-        prevToken = sentence.data[i - 1].word
-
-        # Compute N
-        self.total += 1
-
-        # c(w)
+        token = datum.word
         self.unigramCount[token] += 1
-        self.unigrams.add(token)
+      
+        # Exists a previous token
+        if i > 0:
+          # Assign prevToken
+          prevToken = sentence.data[i - 1].word
+          
+          # Count bigrams
+          self.bigramsCount[(prevToken, token)] += 1
+          self.bigrams.add((prevToken, token))
 
-        # Count the number of word types prev|next w
-        self.nNextCounts[prevToken] += 1
-        self.nPrevCounts[token].add(prevToken)
+          # Count the number of word types prev|next w
+          self.nNextCounts[prevToken] += 1
+          self.nPrevCounts[token].add(prevToken)
 
-        # Count the number of bigrams
-        self.bigramsCount[(token, prevToken)] += 1
-        self.bigrams.add((token, prevToken))
+          if i < len(sentence) - 1:
+            self.words.add(token)
+            self.total +=1
+          
+          i += 1
 
   def score(self, sentence):
     """ Takes a list of strings as argument and returns the log-probability of the 
