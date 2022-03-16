@@ -40,8 +40,10 @@ class StupidBackoffLanguageModel:
 
           if i < len(sentence) - 1:
             self.unigrams.add(token)
-            self.bigrams.add((prevToken, token))
             self.total += 1
+            
+            if  i > 1:
+              self.bigrams.add((prevToken, token))
         
         i += 1
         
