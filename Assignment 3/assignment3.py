@@ -84,11 +84,7 @@ class NaiveBayes:
      * in the NaiveBayes class.
      * Returns nothing
     """
-
-    # Exclude the stop words
-    if self.FILTER_STOP_WORDS:
-      pass
-
+    
     # Count the number of examples of each type
     if klass == 'pos': self.prior[0] += 1
     else: self.prior[1] += 1
