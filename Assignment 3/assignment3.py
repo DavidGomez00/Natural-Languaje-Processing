@@ -41,6 +41,10 @@ class NaiveBayes:
 
   #############################################################################
   # TODO TODO TODO TODO TODO 
+
+  #############################################################################
+  # This code has been written in colaboration with the group David David Esme
+  #############################################################################
   
   def classify(self, words):
     """ TODO
@@ -49,11 +53,11 @@ class NaiveBayes:
 
     # check probability of the sentence being neg
 
-    # final score
+    # final negative score
     negScore = 0
 
     # we calculate the count of negative words 
-    # in the vocabulary plus the len of the vocabulary
+    # in the vocabulary plus the length of the vocabulary
     # because we are doing laplace smoothing
     negCount = len(self.vocab)
     for w in self.vocab:
@@ -70,17 +74,28 @@ class NaiveBayes:
     negScore *= (self.prior[1]/(self.prior[0] + self.prior[1]))
 
     # check probability of the sentence being pos
+    
+    # final negative score
     posScore = 0
+
+    # we calculate the count of positive words 
+    # in the vocabulary plus the length of the vocabulary
+    # because we are doing laplace smoothing
     posCount = len(self.vocab)
     for w in self.vocab:
       posCount += self.countspos[w] 
 
     for w in words:
+      #calculate the count of each word appearing as positive + 1
       aux1 = self.countspos[w] + 1
+
+      #add the result to the final score
       posScore += math.log(aux1/posCount)
 
+    # we multiply the score with the probability of the sentence being positive
     posScore *= (self.prior[0]/(self.prior[0] + self.prior[1]))
 
+    #we compare the probabilities
     if posScore > negScore: return 'pos'
     else: return 'neg'
   
@@ -110,7 +125,6 @@ class NaiveBayes:
       
       # Add the word to the vocab
       self.vocab.add(word)
-    
         
   # TODO TODO TODO TODO TODO 
   #############################################################################
