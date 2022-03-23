@@ -45,6 +45,21 @@ class NaiveBayes:
     """ TODO
       'words' is a list of words to classify. Return 'pos' or 'neg' classification.
     """
+
+
+
+    # check probability of the sentence being neg
+    negScore = 0
+    negCount = len(self.vocab)
+    for w in self.vocab:
+      negCount += self.countsneg[w] 
+
+    for w in words:
+      aux1 = self.countsneg[w] + 1
+      negScore += math.log(aux1/negCount)
+    
+    negScore *= (self.prior[1]/(self.prior[0] + self.prior[1]))
+
     return 'pos'
   
 
