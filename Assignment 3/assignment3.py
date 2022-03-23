@@ -48,15 +48,25 @@ class NaiveBayes:
     """
 
     # check probability of the sentence being neg
+
+    # final score
     negScore = 0
+
+    # we calculate the count of negative words 
+    # in the vocabulary plus the len of the vocabulary
+    # because we are doing laplace smoothing
     negCount = len(self.vocab)
     for w in self.vocab:
       negCount += self.countsneg[w] 
 
     for w in words:
+      #calculate the count of each word appearing as negative + 1
       aux1 = self.countsneg[w] + 1
+
+      #add the result to the final score
       negScore += math.log(aux1/negCount)
 
+    # we multiply the score with the probability of the sentence being negative
     negScore *= (self.prior[1]/(self.prior[0] + self.prior[1]))
 
     # check probability of the sentence being pos
