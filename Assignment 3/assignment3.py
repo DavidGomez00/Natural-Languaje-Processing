@@ -3,8 +3,6 @@
 #
 # The area for you to implement is marked with TODO!
 # Generally, you should not need to touch things *not* marked TODO
-#
-
 
 
 import sys
@@ -59,7 +57,21 @@ class NaiveBayes:
      * in the NaiveBayes class.
      * Returns nothing
     """
-    pass 
+    
+    # TODO: Ensure there is not invalid words like <s>
+
+    for word in words:
+      # Let's split the classifier
+      if klass == 'pos':
+        # Positive words
+        self.countspos[word] += 1
+      else:
+        # Negative words
+        self.countsneg[word] += 1
+      
+      # Add the word to the vocab
+      self.vocab.add(word)
+    
         
   # TODO TODO TODO TODO TODO 
   #############################################################################
