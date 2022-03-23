@@ -47,8 +47,6 @@ class NaiveBayes:
       'words' is a list of words to classify. Return 'pos' or 'neg' classification.
     """
 
-    for word in words:
-      numerador = self.countspos[word]
     return 'pos'
   
 
@@ -70,7 +68,7 @@ class NaiveBayes:
     if klass == 'pos': self.prior[0] += 1
     else: self.prior[1] += 1
 
-    for word in enumerate(words):
+    for word in words:
       # Let's split the classifier
       if klass == 'pos':
         # Positive words
