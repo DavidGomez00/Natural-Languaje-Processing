@@ -47,7 +47,32 @@ class NaiveBayes:
       'words' is a list of words to classify. Return 'pos' or 'neg' classification.
     """
 
-    return 'pos'
+    # check probability of the sentence being neg
+    negScore = 0
+    negCount = len(self.vocab)
+    for w in self.vocab:
+      negCount += self.countsneg[w] 
+
+    for w in words:
+      aux1 = self.countsneg[w] + 1
+      negScore += math.log(aux1/negCount)
+
+    negScore *= (self.prior[1]/(self.prior[0] + self.prior[1]))
+
+    # check probability of the sentence being pos
+    posScore = 0
+    posCount = len(self.vocab)
+    for w in self.vocab:
+      posCount += self.countsneg[w] 
+
+    for w in words:
+      aux1 = self.countspos[w] + 1
+      posScore += math.log(aux1/posCount)
+
+    posScore *= (self.prior[0]/(self.prior[0] + self.prior[1]))
+
+    if posScore > negScore: return 'pos'
+    else: return 'neg'
   
 
   def addExample(self, klass, words):
