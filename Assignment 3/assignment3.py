@@ -63,7 +63,7 @@ class NaiveBayes:
     posScore = 0
     posCount = len(self.vocab)
     for w in self.vocab:
-      posCount += self.countsneg[w] 
+      posCount += self.countspos[w] 
 
     for w in words:
       aux1 = self.countspos[w] + 1
