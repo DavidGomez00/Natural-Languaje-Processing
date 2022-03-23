@@ -38,6 +38,7 @@ class NaiveBayes:
     self.countsneg=collections.defaultdict(lambda:0)
     self.prior=[0.0,0.0]
 
+
   #############################################################################
   # TODO TODO TODO TODO TODO 
   
@@ -45,6 +46,9 @@ class NaiveBayes:
     """ TODO
       'words' is a list of words to classify. Return 'pos' or 'neg' classification.
     """
+
+    for word in words:
+      numerador = self.countspos[word]
     return 'pos'
   
 
@@ -57,12 +61,16 @@ class NaiveBayes:
      * in the NaiveBayes class.
      * Returns nothing
     """
-    
-    # TODO: Ensure there is not invalid words like <s>
+
+    # Exclude the stop words
+    if self.FILTER_STOP_WORDS:
+      pass
+
+    # Count the number of examples of each type
     if klass == 'pos': self.prior[0] += 1
     else: self.prior[1] += 1
 
-    for word in words:
+    for word in enumerate(words):
       # Let's split the classifier
       if klass == 'pos':
         # Positive words
