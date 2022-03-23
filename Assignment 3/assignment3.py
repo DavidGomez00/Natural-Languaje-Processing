@@ -52,7 +52,7 @@ class NaiveBayes:
     # final negative score
     negScore = 0
 
-    # we calculate the count of negative words 
+    # calculate the count of negative words 
     # in the vocabulary plus the length of the vocabulary
     # because we are doing laplace smoothing
     negCount = len(self.vocab)
@@ -74,9 +74,7 @@ class NaiveBayes:
     # final negative score
     posScore = 0
 
-    # we calculate the count of positive words 
-    # in the vocabulary plus the length of the vocabulary
-    # because we are doing laplace smoothing
+    # calculate the count of positive words 
     posCount = len(self.vocab)
     for w in self.vocab:
       posCount += self.countspos[w] 
