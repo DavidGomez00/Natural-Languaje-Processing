@@ -41,7 +41,7 @@ class NaiveBayes:
 
   #############################################################################
   # TODO TODO TODO TODO TODO 
-
+  
   def classify(self, words):
     """ TODO
       'words' is a list of words to classify. Return 'pos' or 'neg' classification.
@@ -122,7 +122,7 @@ class NaiveBayes:
       # Add the word to the vocab
       self.vocab.add(word)
     
-  ''' This code was made in collaboration with Juan Victor group. The 
+  ''' This code was made in collaboration with David David Esme group. The 
   evaluation (for this model and data) with the stop words was slightly worst.
   This means that the model was not overfitting because of the stop words.
   '''
