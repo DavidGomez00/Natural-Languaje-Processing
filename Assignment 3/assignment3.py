@@ -42,10 +42,6 @@ class NaiveBayes:
   #############################################################################
   # TODO TODO TODO TODO TODO 
 
-  #############################################################################
-  # This code has been written in colaboration with the group David David Esme
-  #############################################################################
-  
   def classify(self, words):
     """ TODO
       'words' is a list of words to classify. Return 'pos' or 'neg' classification.
