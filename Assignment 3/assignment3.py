@@ -60,6 +60,11 @@ class NaiveBayes:
     
     # TODO: Ensure there is not invalid words like <s>
 
+    if klass == 'pos':
+      self.prior[0] += 1
+    else:
+      self.prior[1] += 1
+
     for word in words:
       # Let's split the classifier
       if klass == 'pos':
