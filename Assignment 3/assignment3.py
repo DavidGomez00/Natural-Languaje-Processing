@@ -52,7 +52,7 @@ class NaiveBayes:
     # final negative score
     negScore = 0
 
-    # we calculate the count of negative words 
+    # calculate the count of negative words 
     # in the vocabulary plus the length of the vocabulary
     # because we are doing laplace smoothing
     negCount = len(self.vocab)
@@ -60,13 +60,13 @@ class NaiveBayes:
       negCount += self.countsneg[w] 
 
     for w in words:
-      #calculate the count of each word appearing as negative + 1
+      # calculate the count of each word appearing as negative + 1
       aux1 = self.countsneg[w] + 1
 
-      #add the result to the final score
+      # add the result to the final score
       negScore += math.log(aux1/negCount)
 
-    # we multiply the score with the probability of the sentence being negative
+    # multiply the score with the probability of the sentence being negative
     negScore *= (self.prior[1]/(self.prior[0] + self.prior[1]))
 
     # check probability of the sentence being pos
@@ -74,24 +74,22 @@ class NaiveBayes:
     # final negative score
     posScore = 0
 
-    # we calculate the count of positive words 
-    # in the vocabulary plus the length of the vocabulary
-    # because we are doing laplace smoothing
+    # calculate the count of positive words 
     posCount = len(self.vocab)
     for w in self.vocab:
       posCount += self.countspos[w] 
 
     for w in words:
-      #calculate the count of each word appearing as positive + 1
+      # calculate the count of each word appearing as positive + 1
       aux1 = self.countspos[w] + 1
 
-      #add the result to the final score
+      # add the result to the final score
       posScore += math.log(aux1/posCount)
 
-    # we multiply the score with the probability of the sentence being positive
+    # multiply the score with the probability of the sentence being positive
     posScore *= (self.prior[0]/(self.prior[0] + self.prior[1]))
 
-    #we compare the probabilities
+    # compare the probabilities
     if posScore > negScore: return 'pos'
     else: return 'neg'
   
