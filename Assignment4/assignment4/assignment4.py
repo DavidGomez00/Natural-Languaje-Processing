@@ -1,9 +1,13 @@
 #!/usr/bin/env python
+from collections import defaultdict
+from itertools import count
 import json
 import math
 import os
 import re
 import sys
+
+from numpy import double
 
 from PorterStemmer import PorterStemmer
 
@@ -145,10 +149,12 @@ class IRSystem:
         #       Granted this may not be a linked list as in a proper
         #       implementation.
 
+        inv_index = defaultdict(list)
+        for i, text in enumerate(self.docs):
+            for word in set(text):
+                if i not in inv_index[word]:
+                    inv_index[word].append(i)
 
-        inv_index = {}
-        for word in self.vocab:
-            inv_index[word] = []
 
         # ------------------------------------------------------------------
         self.inv_index = inv_index
@@ -160,7 +166,7 @@ class IRSystem:
         """
         # ------------------------------------------------------------------
         # TODO: return the list of postings for a word.
-        posting = []
+        posting = self.inv_index[word]
         
         # ------------------------------------------------------------------
         return posting
@@ -186,9 +192,14 @@ class IRSystem:
         #       inverted index that you created in index().
         # Right now this just returns all the possible documents!
         docs = []
-        for d in range(len(self.docs)):
-            docs.append(d)
 
+        oldset = set(self.inv_index[query[0]])
+        newSet = set()
+        for i in range(1, len(query)):
+            newSet = set(self.inv_index[query[i]])
+            oldset = oldset.intersection(newSet)
+        
+        docs = list(oldset)
         # ------------------------------------------------------------------
 
         return sorted(docs)   # sorted doesn't actually matter
@@ -205,13 +216,36 @@ class IRSystem:
         #       NOTE that you probably do *not* want to store a value for every
         #       word-document pair, but rather just for those pairs where a
         #       word actually occurs in the document.
-
+        
         tfidf = {}
         for word in self.vocab:
             for d in range(len(self.docs)):
                 if word not in tfidf:
                     tfidf[word] = {}
-                tfidf[word][d] = 0.0
+
+                tfidf[word][d] = 0
+
+                if d in self.inv_index[word]:
+                    tf = self.docs[d].count(word)
+                    aux1 = (1 + math.log10(tf))
+                    aux2 = math.log10(len(self.docs) / len(self.inv_index[word]))
+                    tfidf[word][d] = aux1 * aux2
+                    #print(str(aux1) + " * " + str(aux2) + " = " + str(tfidf[word][d]))
+
+        '''
+
+        tfidf = defaultdict(defaultdict)
+        for d, text in enumerate(self.docs):
+            for word in text:
+                if word not in tfidf:
+                    tfidf[word] = defaultdict(float)
+                
+                tfidf[word][d] = 0
+                if d in self.inv_index[word]:
+                    tf = self.docs[d].count(word)
+                    tfidf[word][d] = (1 + math.log10(tf)) * math.log10(len(self.docs) / len(self.inv_index[word]))
+           ''' 
+
 
         # ------------------------------------------------------------------
         self.tfidf = tfidf
