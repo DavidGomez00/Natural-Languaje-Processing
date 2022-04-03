@@ -219,33 +219,17 @@ class IRSystem:
         
         
         tfidf = {}
-        '''
-        for word in self.vocab:
-            for d in range(len(self.docs)):
-                if word not in tfidf:
-                    tfidf[word] = {}
+        tf = defaultdict(int)
 
-                tfidf[word][d] = 0
+        for i, doc in enumerate(self.docs):
+            for word in doc:
+                tf[(word, i)] += 1
 
-                if d in self.inv_index[word]:
-                    tf = self.docs[d].count(word)
-                    aux1 = (1 + math.log10(tf))
-                    aux2 = math.log10(len(self.docs) / len(self.inv_index[word]))
-                    tfidf[word][d] = aux1 * aux2
-                    #print(str(aux1) + " * " + str(aux2) + " = " + str(tfidf[word][d]))
-
-
-        tfidf = defaultdict(defaultdict)
-        for d, text in enumerate(self.docs):
-            for word in text:
-                if word not in tfidf:
-                    tfidf[word] = defaultdict(float)
-                
-                tfidf[word][d] = 0
-                if d in self.inv_index[word]:
-                    tf = self.docs[d].count(word)
-                    tfidf[word][d] = (1 + math.log10(tf)) * math.log10(len(self.docs) / len(self.inv_index[word]))
-        ''' 
+        for i, doc in enumerate(self.docs):
+            for word in set(doc):
+                df = len(self.inv_index[(word)])
+                tfidf[(word, i)] = (1 + math.log(tf[(word, i)])) * math.log(len(self.docs)/df)
+                    
 
 
         # ------------------------------------------------------------------
@@ -255,7 +239,7 @@ class IRSystem:
         # ------------------------------------------------------------------
         # TODO: Return the tf-idf weigthing for the given word (string) and
         #       document index.
-        tfidf = 0.0
+        tfidf = self.tfidf[(word, document)]
         # ------------------------------------------------------------------
         return tfidf
 
