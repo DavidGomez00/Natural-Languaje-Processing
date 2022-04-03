@@ -218,34 +218,31 @@ class IRSystem:
         #       word actually occurs in the document.
         
         
-        tfidf = {}
+        tfidf = dict()
+
+        for i, doc in enumerate(self.docs):
+            for word in self.vocab:
+                if i in self.inv_index[word]:
+
+                    tf = doc.count(word)
+                    df = len(self.inv_index[word])
+
+                    tfidf[(word, i)] = (1 + math.log(tf)) * math.log(len(self.docs)/df)
+                    
+
+
         '''
         for word in self.vocab:
-            for d in range(len(self.docs)):
-                if word not in tfidf:
-                    tfidf[word] = {}
+            wDocs = self.inv_index[word]
 
-                tfidf[word][d] = 0
+            for docIndex in wDocs:
+                doc = self.docs[docIndex]
 
-                if d in self.inv_index[word]:
-                    tf = self.docs[d].count(word)
-                    aux1 = (1 + math.log10(tf))
-                    aux2 = math.log10(len(self.docs) / len(self.inv_index[word]))
-                    tfidf[word][d] = aux1 * aux2
-                    #print(str(aux1) + " * " + str(aux2) + " = " + str(tfidf[word][d]))
+                tf = doc.count(word)
+                df = len(wDocs)
 
-
-        tfidf = defaultdict(defaultdict)
-        for d, text in enumerate(self.docs):
-            for word in text:
-                if word not in tfidf:
-                    tfidf[word] = defaultdict(float)
-                
-                tfidf[word][d] = 0
-                if d in self.inv_index[word]:
-                    tf = self.docs[d].count(word)
-                    tfidf[word][d] = (1 + math.log10(tf)) * math.log10(len(self.docs) / len(self.inv_index[word]))
-        ''' 
+                tfidf[(word, docIndex)] = (1 + math.log(tf)) * math.log(len(self.docs)/df)
+        '''
 
 
         # ------------------------------------------------------------------
