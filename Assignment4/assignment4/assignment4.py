@@ -218,18 +218,18 @@ class IRSystem:
         #       word actually occurs in the document.
         
 
-        tfidf = dict()
 
+        tfidf = {}
+
+        
         for i, doc in enumerate(self.docs):
-            for word in self.vocab:
-                if i in self.inv_index[word]:
+            for word in set(doc):
 
-                    #tf = doc.count(word)
-                    tf = 20
-                    df = len(self.inv_index[word])
+                tf = doc.count(word)
+                df = len(self.inv_index[word])
 
-                    tfidf[(word, i)] = (1 + math.log(tf)) * math.log(len(self.docs)/df)
-                    
+                tfidf[(word, i)] = (1 + math.log(tf)) * math.log(len(self.docs)/df)
+        
 
 
         '''
@@ -284,6 +284,12 @@ class IRSystem:
 
         for d, doc in enumerate(self.docs):
             words_in_doc = set(doc)
+            
+            aux = 0
+
+            #for word in words_in_query.intersection(words_in_doc):
+
+
             scores[d] = len(words_in_query.intersection(words_in_doc)) \
                     / float(len(words_in_query.union(words_in_doc)))
 
