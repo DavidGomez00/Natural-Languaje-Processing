@@ -271,12 +271,14 @@ class IRSystem:
         # similarity between the query and every document.
         words_in_query = set(query)
 
+        # Calculate all of the qt
         queryTfDict = {}
         for word in words_in_query:
             tfquery = query.count(word)
             dfquery = len(self.inv_index[word])
-            queryTfDict[word] = ((1 + math.log10(tfquery)) * math.log10(len(self.docs) /dfquery))
+            queryTfDict[word] = ((1 + math.log10(tfquery)) * math.log10(len(self.docs) / dfquery))
 
+        # Calculate all the sqrt(sum(qt^2))
         aux2 = 0
         for word in words_in_query:
             aux2 += math.pow(queryTfDict[word], 2)
@@ -285,16 +287,18 @@ class IRSystem:
         for d, doc in enumerate(self.docs):
             words_in_doc = set(doc)
             
+            # Calculate  sum(qt * dt) for every word in the intersection
             aux = 0
             for word in words_in_query.intersection(words_in_doc):
                 aux += queryTfDict[word] * self.tfidf[(word, d)]
             
+            # Calculate all the sqrt(sum(dt^2))
             aux3 = 0
             for word in words_in_doc:
                 aux3 += math.pow(self.tfidf[(word, d)], 2)
             aux3 = math.sqrt(aux3)
                 
-
+            # set the score
             scores[d] = aux / (aux2 * aux3)
         # ------------------------------------------------------------------
 
