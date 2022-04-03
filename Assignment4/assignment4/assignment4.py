@@ -217,19 +217,22 @@ class IRSystem:
         #       word-document pair, but rather just for those pairs where a
         #       word actually occurs in the document.
         
-        
-        tfidf = {}
-        tf = defaultdict(int)
-
+        cDict = defaultdict(int)
         for i, doc in enumerate(self.docs):
             for word in doc:
-                tf[(word, i)] += 1
+                cDict[(word, i)] += 1
+        
 
+        tfidf = {}
+
+        
         for i, doc in enumerate(self.docs):
             for word in set(doc):
-                df = len(self.inv_index[(word)])
-                tfidf[(word, i)] = (1 + math.log(tf[(word, i)])) * math.log(len(self.docs)/df)
-                    
+
+                tf = cDict[(word, i)]
+                df = len(self.inv_index[word])
+
+                tfidf[(word, i)] = (1 + math.log10(tf)) * math.log10(len(self.docs)/df)
 
 
         # ------------------------------------------------------------------
@@ -268,10 +271,32 @@ class IRSystem:
         # similarity between the query and every document.
         words_in_query = set(query)
 
+        queryTfDict = {}
+        for word in words_in_query:
+            tfquery = query.count(word)
+            dfquery = len(self.inv_index[word])
+            queryTfDict[word] = ((1 + math.log10(tfquery)) * math.log10(len(self.docs)/dfquery))
+
+
         for d, doc in enumerate(self.docs):
             words_in_doc = set(doc)
-            scores[d] = len(words_in_query.intersection(words_in_doc)) \
-                    / float(len(words_in_query.union(words_in_doc)))
+            
+            aux = 0
+            for word in words_in_query.intersection(words_in_doc):
+                aux += queryTfDict[word] * self.tfidf[(word, d)]
+
+            aux2 = 0
+            for word in words_in_query:
+                aux2 += math.pow(queryTfDict[word], 2)
+            aux2 = math.sqrt(aux2)
+            
+            aux3 = 0
+            for word in words_in_doc:
+                aux3 += math.pow(self.tfidf[(word, d)], 2)
+            aux3 = math.sqrt(aux3)
+                
+
+            scores[d] = aux / (aux2 * aux3)
 
         # ------------------------------------------------------------------
 
