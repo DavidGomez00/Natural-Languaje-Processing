@@ -275,8 +275,12 @@ class IRSystem:
         for word in words_in_query:
             tfquery = query.count(word)
             dfquery = len(self.inv_index[word])
-            queryTfDict[word] = ((1 + math.log10(tfquery)) * math.log10(len(self.docs)/dfquery))
+            queryTfDict[word] = ((1 + math.log10(tfquery)) * math.log10(len(self.docs) + 1/dfquery))
 
+        aux2 = 0
+        for word in words_in_query:
+            aux2 += math.pow(queryTfDict[word], 2)
+        aux2 = math.sqrt(aux2)
 
         for d, doc in enumerate(self.docs):
             words_in_doc = set(doc)
@@ -284,11 +288,6 @@ class IRSystem:
             aux = 0
             for word in words_in_query.intersection(words_in_doc):
                 aux += queryTfDict[word] * self.tfidf[(word, d)]
-
-            aux2 = 0
-            for word in words_in_query:
-                aux2 += math.pow(queryTfDict[word], 2)
-            aux2 = math.sqrt(aux2)
             
             aux3 = 0
             for word in words_in_doc:
@@ -297,7 +296,6 @@ class IRSystem:
                 
 
             scores[d] = aux / (aux2 * aux3)
-
         # ------------------------------------------------------------------
 
         ranking = [idx for idx, sim in sorted(enumerate(scores),
