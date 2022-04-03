@@ -217,14 +217,15 @@ class IRSystem:
         #       word-document pair, but rather just for those pairs where a
         #       word actually occurs in the document.
         
-        
+
         tfidf = dict()
 
         for i, doc in enumerate(self.docs):
             for word in self.vocab:
                 if i in self.inv_index[word]:
 
-                    tf = doc.count(word)
+                    #tf = doc.count(word)
+                    tf = 20
                     df = len(self.inv_index[word])
 
                     tfidf[(word, i)] = (1 + math.log(tf)) * math.log(len(self.docs)/df)
@@ -252,7 +253,7 @@ class IRSystem:
         # ------------------------------------------------------------------
         # TODO: Return the tf-idf weigthing for the given word (string) and
         #       document index.
-        tfidf = 0.0
+        tfidf = self.tfidf[(word, document)]
         # ------------------------------------------------------------------
         return tfidf
 
