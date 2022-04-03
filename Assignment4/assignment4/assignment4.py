@@ -217,7 +217,9 @@ class IRSystem:
         #       word-document pair, but rather just for those pairs where a
         #       word actually occurs in the document.
         
+        
         tfidf = {}
+        '''
         for word in self.vocab:
             for d in range(len(self.docs)):
                 if word not in tfidf:
@@ -232,7 +234,6 @@ class IRSystem:
                     tfidf[word][d] = aux1 * aux2
                     #print(str(aux1) + " * " + str(aux2) + " = " + str(tfidf[word][d]))
 
-        '''
 
         tfidf = defaultdict(defaultdict)
         for d, text in enumerate(self.docs):
@@ -244,7 +245,7 @@ class IRSystem:
                 if d in self.inv_index[word]:
                     tf = self.docs[d].count(word)
                     tfidf[word][d] = (1 + math.log10(tf)) * math.log10(len(self.docs) / len(self.inv_index[word]))
-           ''' 
+        ''' 
 
 
         # ------------------------------------------------------------------
