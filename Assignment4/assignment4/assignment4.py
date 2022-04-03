@@ -275,7 +275,7 @@ class IRSystem:
         for word in words_in_query:
             tfquery = query.count(word)
             dfquery = len(self.inv_index[word])
-            queryTfDict[word] = ((1 + math.log10(tfquery)) * math.log10(len(self.docs) + 1/dfquery))
+            queryTfDict[word] = ((1 + math.log10(tfquery)) * math.log10(len(self.docs) /dfquery))
 
         aux2 = 0
         for word in words_in_query:
