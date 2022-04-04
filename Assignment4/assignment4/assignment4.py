@@ -13,6 +13,9 @@ from PorterStemmer import PorterStemmer
 
 
 class IRSystem:
+    '''
+    This code was developed with the Juan Victor group.
+    '''
 
     def __init__(self):
         # For holding the data - initialized in read_data()
@@ -271,35 +274,27 @@ class IRSystem:
         # similarity between the query and every document.
         words_in_query = set(query)
 
-        # Calculate all of the qt
+        # Calculate qt
         queryTfDict = {}
         for word in words_in_query:
-            tfquery = query.count(word)
-            dfquery = len(self.inv_index[word])
-            queryTfDict[word] = ((1 + math.log10(tfquery)) * math.log10(len(self.docs) / dfquery))
-
-        # Calculate all the sqrt(sum(qt^2))
-        aux2 = 0
-        for word in words_in_query:
-            aux2 += math.pow(queryTfDict[word], 2)
-        aux2 = math.sqrt(aux2)
+            queryTfDict[word] = (1 + math.log10(query.count(word)))
 
         for d, doc in enumerate(self.docs):
             words_in_doc = set(doc)
             
             # Calculate  sum(qt * dt) for every word in the intersection
-            aux = 0
+            numerator = 0
             for word in words_in_query.intersection(words_in_doc):
-                aux += queryTfDict[word] * self.tfidf[(word, d)]
+                numerator += queryTfDict[word] * self.tfidf[(word, d)]
             
             # Calculate all the sqrt(sum(dt^2))
-            aux3 = 0
+            denominator = 0
             for word in words_in_doc:
-                aux3 += math.pow(self.tfidf[(word, d)], 2)
-            aux3 = math.sqrt(aux3)
+                denominator += math.pow(self.tfidf[(word, d)], 2)
+            denominator = math.sqrt(denominator)
                 
             # set the score
-            scores[d] = aux / (aux2 * aux3)
+            scores[d] = numerator / denominator
         # ------------------------------------------------------------------
 
         ranking = [idx for idx, sim in sorted(enumerate(scores),
