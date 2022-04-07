@@ -153,11 +153,9 @@ class IRSystem:
         #       implementation.
 
         inv_index = defaultdict(list)
-        for i, text in enumerate(self.docs):
-            for word in set(text):
-                if i not in inv_index[word]:
-                    inv_index[word].append(i)
-
+        for i, doc in enumerate(self.docs):
+            for word in set(doc):
+                inv_index[word].append(i)
 
         # ------------------------------------------------------------------
         self.inv_index = inv_index
@@ -198,6 +196,7 @@ class IRSystem:
 
         oldset = set(self.inv_index[query[0]])
         newSet = set()
+        
         for i in range(1, len(query)):
             newSet = set(self.inv_index[query[i]])
             oldset = oldset.intersection(newSet)
