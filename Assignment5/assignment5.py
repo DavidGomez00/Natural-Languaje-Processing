@@ -1,6 +1,7 @@
 import collections
 import copy
 import optparse
+from posixpath import lexists
 
 from ling.Tree import Tree
 import ling.Trees as Trees
@@ -37,7 +38,60 @@ class PCFGParser(Parser):
         """
         # TODO: implement this method
         #######################################
+
+        # Initialize score
+        score = []
+
+        for i in range(len(sentence)+1):
+            score.append([])
+        
+        for i in range(len(sentence)+1):
+            for _ in range(len(sentence)+1):
+                score[i].append(collections.defaultdict(lambda: 0.0))
+
+        # Initialize back
+        back = []
+
+        for i in range(len(sentence)+1):
+            back.append([])
+        
+        for i in range(len(sentence)+1):
+            for _ in range(len(sentence)+1):
+                back[i].append(collections.defaultdict(lambda: str))
+
+        # Algorithm
+        for i in range(len(sentence)):
+            for tag in self.lexicon.get_all_tags():
+                if (self.lexicon.word_to_tag_counters[sentence[i]][tag] > 0):
+                    score[i][i+1][tag] = self.lexicon.score_tagging(sentence[i], tag)
+            
+            # Handle unaries
+            added = True
+            while added:
+                added = False
+                for tag in self.lexicon.get_all_tags():
+                    for rule in self.grammar.unary_rules_by_child[tag]:
+                        prob = rule.score * score[i][i+1][tag]
+                        if prob > score[i][i+1][rule.parent]:
+                            score[i][i+1][rule.parent] = prob
+                            back[i][i+1][rule.parent] = tag
+                            added = True
+        
+        for span in range(2, len(sentence)):
+            for begin in range(len(sentence) - span):
+                end = begin + span
+                for split in range(begin+1, end-1):
+                    
+                    prob = score[begin][end][tagB] * score[split][end][tagC]*rule.score
+                    if prob > score[begin][end][rule.parent]:
+                        score[begin][end][rule.parent] = prob
+                        back[begin][end][rule.parent] = str(BinaryRule(split, tagB, tagC))
+
+        
         tree=Tree("ROOT",[Tree("S")])
+        
+        
+
         #######################################
         return TreeBinarization.unbinarize_tree(tree)
 
@@ -467,7 +521,8 @@ if __name__ == '__main__':
     print("")
     max_length = int(options['max_length'])
 
-    parser = globals()[options['parser']]()
+    # parser = globals()[options['parser']]()
+    parser = globals()['PCFGParser']()
     print("Using parser: %s" % parser.__class__.__name__)
 
     data_set = options['data']
