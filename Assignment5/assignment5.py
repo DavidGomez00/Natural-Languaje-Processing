@@ -57,37 +57,93 @@ class PCFGParser(Parser):
         
         for i in range(len(sentence)+1):
             for _ in range(len(sentence)+1):
-                back[i].append(collections.defaultdict(lambda: str))
+                back[i].append(collections.defaultdict(lambda: list()))
 
-        # Algorithm
+
+        # Algorithm:
+        # Filling the score
         for i in range(len(sentence)):
             for tag in self.lexicon.get_all_tags():
-                if (self.lexicon.word_to_tag_counters[sentence[i]][tag] > 0):
-                    score[i][i+1][tag] = self.lexicon.score_tagging(sentence[i], tag)
+                # Comprobamos que hay una regla que vaya de tag a la palabra
+                prob = self.lexicon.score_tagging(sentence[i], tag)
+                if (prob > 0):
+                    score[i][i+1][tag] = prob
             
             # Handle unaries
             added = True
             while added:
                 added = False
-                for tag in self.lexicon.get_all_tags():
-                    for rule in self.grammar.unary_rules_by_child[tag]:
-                        prob = rule.score * score[i][i+1][tag]
-                        if prob > score[i][i+1][rule.parent]:
-                            score[i][i+1][rule.parent] = prob
-                            back[i][i+1][rule.parent] = tag
+                # Check unary rules
+                x = list(score[i][i+1].keys())
+                for B in x:
+                    # Check only rules in our grammar
+                    for rule in self.grammar.get_unary_rules_by_child(B):
+                        A = rule.parent
+                        prob = rule.score * score[i][i+1][B]
+                        if (prob > score[i][i+1][A]):
+                            score[i][i+1][A] = prob
+                            back[i][i+1][A] = [B]
+                            # If a score is modified we need to check again
                             added = True
         
-        for span in range(2, len(sentence)):
-            for begin in range(len(sentence) - span):
+        # Filling the chart
+        for span in range(2, len(sentence)+1):
+            for begin in range(len(sentence) - span+1):
                 end = begin + span
-                for split in range(begin+1, end-1):
-                    
-                    prob = score[begin][end][tagB] * score[split][end][tagC]*rule.score
-                    if prob > score[begin][end][rule.parent]:
-                        score[begin][end][rule.parent] = prob
-                        back[begin][end][rule.parent] = str(BinaryRule(split, tagB, tagC))
+                print(begin, end)
+                for split in range(begin+1, end):
+                    x = list(score[begin][split].keys())
+                    y = list(score[split][end].keys())
+                    # Get tags from bottom left chart
+                    for B in x:
+                        # Check all binary rules that use left child as retrieved tags
+                        for rule in self.grammar.get_binary_rules_by_left_child(B):
+                            A = rule.parent
+                            C = rule.right_child
+                            # Get rules that can use tags from left and right
+                            if (rule.right_child in y):
+                                prob = score[begin][split][B] \
+                                    * score[split][end][C] \
+                                    * rule.score
+                                if(prob > score[begin][end][A]):
+                                    score[begin][end][A] = prob
+                                    back[begin][end][A] = [split,B,C]
+                
+                # Handle unaries
+                added = True
+                while added:
+                    added = False
+                    # Check unary rules
+                    x = list(score[begin][end].keys())
+                    for B in x:
+                        # Check only rules in our grammar
+                        for rule in self.grammar.get_unary_rules_by_child(B):
+                            A = rule.parent
+                            prob = rule.score * score[i][i+1][B]
+                            if (prob > score[i][i+1][A]):
+                                score[i][i+1][A] = prob
+                                back[i][i+1][A] = [B]
+                                # If a score is modified we need to check again
+                                added = True
 
-        
+
+        # Once finished, we take highest prob:
+        print(score[0][2].items())
+
+
+        # Crear método build_tree():
+        # build_tree(sentence, back, VAR, begin, end)
+        #   check in back to get the list: 
+        #       list has no elements: we are on a leaf
+        #
+        #       list has one element: recursive create a tree from that var
+        #
+        #       list has three elements: recursive create tree of left and right
+        #       reference as [begin][split] and [split][end]
+        #           return Tree("VAR", [left_tree, right_tree])
+        #       
+
+
         tree=Tree("ROOT",[Tree("S")])
         
         
