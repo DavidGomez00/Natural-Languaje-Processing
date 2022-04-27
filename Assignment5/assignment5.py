@@ -39,6 +39,8 @@ class PCFGParser(Parser):
         # TODO: implement this method
         #######################################
 
+        # Esta práctica ha sido desarrollada junto con el grupo Juan Víctor
+
         # Initialize score
         score = []
 
@@ -57,7 +59,7 @@ class PCFGParser(Parser):
         
         for i in range(len(sentence)+1):
             for _ in range(len(sentence)+1):
-                back[i].append(collections.defaultdict(lambda: list()))
+                back[i].append(collections.defaultdict(lambda: []))
 
 
         # Algorithm:
@@ -89,9 +91,10 @@ class PCFGParser(Parser):
         # Filling the chart
         for span in range(2, len(sentence)+1):
             for begin in range(len(sentence) - span+1):
+                
                 end = begin + span
-                print(begin, end)
                 for split in range(begin+1, end):
+
                     x = list(score[begin][split].keys())
                     y = list(score[split][end].keys())
                     # Get tags from bottom left chart
@@ -101,7 +104,7 @@ class PCFGParser(Parser):
                             A = rule.parent
                             C = rule.right_child
                             # Get rules that can use tags from left and right
-                            if (rule.right_child in y):
+                            if (C in y):
                                 prob = score[begin][split][B] \
                                     * score[split][end][C] \
                                     * rule.score
@@ -119,37 +122,51 @@ class PCFGParser(Parser):
                         # Check only rules in our grammar
                         for rule in self.grammar.get_unary_rules_by_child(B):
                             A = rule.parent
-                            prob = rule.score * score[i][i+1][B]
-                            if (prob > score[i][i+1][A]):
-                                score[i][i+1][A] = prob
-                                back[i][i+1][A] = [B]
+                            prob = rule.score * score[begin][end][B]
+                            if (prob > score[begin][end][A]):
+                                score[begin][end][A] = prob
+                                back[begin][end][A] = [B]
                                 # If a score is modified we need to check again
-                                added = True
+                                added = True    
 
-
-        # Once finished, we take highest prob:
-        print(score[0][2].items())
-
-
-        # Crear método build_tree():
-        # build_tree(sentence, back, VAR, begin, end)
-        #   check in back to get the list: 
-        #       list has no elements: we are on a leaf
-        #
-        #       list has one element: recursive create a tree from that var
-        #
-        #       list has three elements: recursive create tree of left and right
-        #       reference as [begin][split] and [split][end]
-        #           return Tree("VAR", [left_tree, right_tree])
-        #       
-
-
-        tree=Tree("ROOT",[Tree("S")])
+        # Construimos
+        aux = self.build_tree(sentence, back, 0, len(sentence), "S")
+        tree = Tree("ROOT", [aux])
         
-        
-
         #######################################
         return TreeBinarization.unbinarize_tree(tree)
+
+    def build_tree(self, sentence, back, begin, end, V):
+        '''Recursive function that returns a Tree from a back'''
+        
+        # Referenciamos la lista
+        my_list = back[begin][end][V]
+
+        # List is empty
+        if (len(my_list) == 0):
+            # caso base, estamos en un preterminal
+            return Tree(V, [Tree(sentence[begin])])
+
+        # List has 1 element
+        if (len(my_list) == 1):
+            # Llamada recursiva
+            tree = self.build_tree(sentence, back, begin, end, my_list[0])
+            return Tree(V, [tree])
+
+        # List has 3 elements
+        if (len(my_list) == 3):
+            # Entendemos los elementos de la lista
+            split = my_list[0]
+            B = my_list[1]
+            C = my_list[2]
+            
+            # Construimos los sub árboles
+            left_tree = self.build_tree(sentence, back, begin, split, B)
+            right_tree = self.build_tree(sentence, back, split, end, C)
+
+            # retornamos el árbol a partir de los dos sub árboles
+            return Tree(V, [left_tree, right_tree])
+
 
 
 class BaselineParser(Parser):
@@ -577,8 +594,7 @@ if __name__ == '__main__':
     print("")
     max_length = int(options['max_length'])
 
-    # parser = globals()[options['parser']]()
-    parser = globals()['PCFGParser']()
+    parser = globals()[options['parser']]()
     print("Using parser: %s" % parser.__class__.__name__)
 
     data_set = options['data']
