@@ -39,7 +39,7 @@ class PCFGParser(Parser):
         # TODO: implement this method
         #######################################
 
-        # Esta práctica ha sido desarrollada junto con el grupo Juan Víctor
+        # Esta práctica ha sido desarrollada junto con el grupo David David Esme
 
         # Initialize score
         score = []
