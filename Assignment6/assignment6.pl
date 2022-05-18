@@ -34,6 +34,8 @@ lex(muerde, vts).
 lex(muerden, vtp).
 
 % Reglas del DCG
+
+
 s --> nps, vps;
     npp, vpp.
 
